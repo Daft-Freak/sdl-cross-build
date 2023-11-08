@@ -25,6 +25,20 @@ jobs:
         ref: release-2.28.x
         path: SDL2
 
+    - name: Checkout SDL2_image
+      uses: actions/checkout@v3
+      with:
+        repository: libsdl-org/SDL_image
+        ref: release-2.6.x
+        path: SDL2_image
+
+    - name: Checkout SDL2_net
+      uses: actions/checkout@v3
+      with:
+        repository: libsdl-org/SDL_net
+        ref: release-2.2.x
+        path: SDL2_net
+
     - name: Install deps
       run: |
         sudo apt update && sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
@@ -37,3 +51,28 @@ jobs:
 
     - name: Install SDL
       run: cmake --build sdl2-build --config $BUILD_TYPE -j 2 --target install
+
+    - name: Configure SDL_image
+      run: cmake -S SDL2_image -B sdl2-image-build -DCMAKE_TOOLCHAIN_FILE=$PWD/arm.toolchain -DCMAKE_INSTALL_PREFIX=$PWD/sysroot
+
+    - name: Build SDL_image
+      run: cmake --build sdl2-image-build --config $BUILD_TYPE -j 2
+
+    - name: Install SDL_image
+      run: cmake --build sdl2-image-build --config $BUILD_TYPE -j 2 --target install
+
+    - name: Configure SDL_net
+      run: cmake -S SDL2_net -B sdl2-net-build -DCMAKE_TOOLCHAIN_FILE=$PWD/arm.toolchain -DCMAKE_INSTALL_PREFIX=$PWD/sysroot
+
+    - name: Build SDL_net
+      run: cmake --build sdl2-net-build --config $BUILD_TYPE -j 2
+
+    - name: Install SDL_net
+      run: cmake --build sdl2-net-build --config $BUILD_TYPE -j 2 --target install
+
+    - name: Upload Artifact
+      if: github.event_name != 'release'
+      uses: actions/upload-artifact@v3
+      with:
+        name: sysroot
+        path: sysroot
