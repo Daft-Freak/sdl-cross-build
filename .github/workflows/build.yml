@@ -27,10 +27,13 @@ jobs:
 
     - name: Install deps
       run: |
-        sudo apt update && sudo apt install gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
+        sudo apt update && sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
 
     - name: Configure SDL
-      run: cmake -S SDL2 -B sdl2-build -DCMAKE_TOOLCHAIN_FILE=$PWD/arm.toolchain -DSDL_LIBSAMPLERATE=0 -DCMAKE_INSTALL_PREFIX=./sysroot
+      run: cmake -S SDL2 -B sdl2-build -DCMAKE_TOOLCHAIN_FILE=$PWD/arm.toolchain -DSDL_LIBSAMPLERATE=0 -DCMAKE_INSTALL_PREFIX=$PWD/sysroot
 
     - name: Build SDL
       run: cmake --build sdl2-build --config $BUILD_TYPE -j 2
+
+    - name: Install SDL
+      run: cmake --build sdl2-build --config $BUILD_TYPE -j 2 --target install
