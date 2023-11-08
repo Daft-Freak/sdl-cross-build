@@ -29,6 +29,8 @@ jobs:
       run: |
         sudo apt update && sudo apt install gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabihf
 
+    - run: ls
+
     - name: Configure SDL
       run: cmake -S SDL2 -B sdl2-build -DCMAKE_TOOLCHAIN_FILE=arm.toolchain -DSDL_LIBSAMPLERATE=0 -DCMAKE_INSTALL_PREFIX=sysroot
 
