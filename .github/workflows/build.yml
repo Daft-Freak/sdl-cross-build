@@ -75,4 +75,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: sysroot
-        path: sysroot
+        path: |
+          sysroot
+          *.toolchain
